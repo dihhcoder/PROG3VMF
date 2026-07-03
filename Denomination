@@ -11,7 +11,7 @@ public class Denomination{
         return this.value;
     }
 
-    public double getQuantity(){
-        return this.qunatity;
+    public int getQuantity(){
+        return this.quantity;
     }
 }

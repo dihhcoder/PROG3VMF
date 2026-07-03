@@ -62,7 +62,6 @@ public class Slots
     public void removeItem(Item itemToRemove)
     {
         this.ItemList.remove(itemToRemove);
-
     }
 
 

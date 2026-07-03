@@ -1,4 +1,4 @@
-public class Item 
+public class Item
 {
     private String name;
     private int calories;
@@ -11,11 +11,11 @@ public class Item
 
     public String getName() 
     {
-        return name;
+        return this.name;
     }
 
     public int getCalories() 
     {
-        return calories;
+        return this.calories;
     }
 }
