@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Factory {
     public static void main(String[] args) {
         int choice, testChoice, flag = 0;
+        Regular regular = null;
         Scanner keyboard = new Scanner(System.in);
         do{
             System.out.println("Welcome to the Vending Machine Factory!");
@@ -15,7 +16,7 @@ public class Factory {
             switch (choice) {
                 case 1:
                     System.out.println("Creating a new Vending Machine...");
-                    Regular regular = new Regular();
+                    regular = new Regular();
                     flag = 1;
                     break;
                 case 2:
@@ -33,11 +34,11 @@ public class Factory {
                             switch (testChoice) {
                                 case 1:
                                     System.out.println("Testing Vending Features...");
-                                    // Add code to test vending features here
+                                    regular.vending();
                                     break;
                                 case 2:
                                     System.out.println("Testing Management Features...");
-                                    // Add code to test management features here
+                                    regular.management();
                                     break;
                                 case 3:
                                     System.out.println("Returning to Main Menu...");
