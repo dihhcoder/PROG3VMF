@@ -106,4 +106,16 @@ public class CashStorage
             System.out.printf("Denomination: $%.2f, Quantity: %d%n", cash.getValue(), cash.getQuantity());
         }
     }
+
+    public int getQuantity(double value)
+    {
+        for (Denomination cash : cashList)
+        {
+            if (cash.getValue() == value)
+            {
+                return cash.getQuantity();
+            }
+        }
+        return 0;
+    }
 }

@@ -205,6 +205,9 @@ public class Regular {
         for (Denomination d : cashStorage.getCashList()) {
             tempCashList.addCash(new Denomination(d.getValue(), d.getQuantity()));
         }
+        for (Denomination d : cashInserted.getCashList()) {
+            tempCashList.addCash(new Denomination(d.getValue(), d.getQuantity()));
+        }
         for (int i = tempCashList.getCashList().size() - 1; i >= 0; i--) {
             Denomination temp = tempCashList.getCashList().get(i);
             while (changeAmount >= temp.getValue() && temp.getQuantity() > 0) {
@@ -297,10 +300,10 @@ public class Regular {
             System.out.println("Select a slot number to manage (1-8) or 0 to return:");
             slotChoice = slot.nextInt();
             slot.nextLine();
-            if (slotChoice < 1 || slotChoice > 8) {
-                System.out.println("Invalid slot number. Please try again.");
-            } else if (slotChoice == 0) {
+            if (slotChoice == 0) {
                 System.out.println("Returning to previous menu.");
+            } else if (slotChoice < 1 || slotChoice > 8) {
+                System.out.println("Invalid slot number. Please try again.");
             } else {
                 manageSlot(slotChoice - 1);
             }
