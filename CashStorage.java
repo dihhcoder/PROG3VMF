@@ -1,9 +1,19 @@
 import java.util.ArrayList;
-
+/**
+ * A Constructor class for Cash Storages/Vaults on the Vending Machine
+ * @author Jasper Isiah Geronimo
+ * @author John Kendrick Constantino
+ */
 public class CashStorage
 {
     private ArrayList<Denomination> cashList;
 
+    /**
+     * Creates a CashStorage with regards to the current PHP Denominations
+     * <p>
+     * Stores them in increasing order
+     * @param cashList The ArrayList which stores the denominations
+     */
     public CashStorage(ArrayList<Denomination> cashList)
     {
         this.cashList = cashList;
@@ -22,6 +32,13 @@ public class CashStorage
         this.addCash(new Denomination(1000.00, 0));
     }
 
+    /**
+     * Adds cash to the Cash Vault
+     * <p>
+     * If denomination value already exists, only the quantity is updated
+     * Else, A new denomination will be created and will be added in increasing order
+     * @param cash The Denomination to be added
+     */
     public void addCash(Denomination cash)
     {
         int i, newQuantity;
@@ -36,8 +53,7 @@ public class CashStorage
                 if (temp.getValue() == cash.getValue())
                 {
                     newQuantity = temp.getQuantity() + cash.getQuantity();
-                    cashList.set(i, new Denomination(temp.getValue(),
-                    newQuantity));
+                    cashList.get(i).setQuantity(newQuantity);
                     found = true;
                 }
             }
@@ -66,6 +82,11 @@ public class CashStorage
         }
     }
 
+    /**
+     * Removes a certain amount of a denomination
+     * @param cash The denomination to be removed
+     * @return true if operation was successful, else false
+     */
     public boolean removeCash(Denomination cash)
     {
         boolean success = false;
@@ -110,30 +131,35 @@ public class CashStorage
         return success;
     }
 
+    /**
+     * Gets the arraylist holidng all denominations
+     * @return the cashvault arraylist
+     */
     public ArrayList<Denomination> getCashList()
     {
         return cashList;
     }
 
-    public void printCashStorage()
-    {
-        System.out.println("Cash Storage:");
-        for (Denomination cash : cashList)
-        {
-            System.out.printf("Denomination: $%.2f, Quantity: %d%n",
-            cash.getValue(), cash.getQuantity());
-        }
+    /**
+     * Gets the number of denominations in the list
+     * @return The size of the cash vault
+     */
+    public int getSize(){
+        return cashList.size();
     }
 
-    public int getQuantity(double value)
-    {
-        for (Denomination cash : cashList)
-        {
-            if (cash.getValue() == value)
-            {
-                return cash.getQuantity();
+    /**
+     * Removes a denomination from the cash vault
+     * @param value the value of the denomination to be removed
+     */
+    public void removeDenomination(double value){
+        int i;
+        boolean removed = false;
+        for(i = 0; i < cashList.size() && !removed; i++){
+            if(cashList.get(i).getValue() == value){
+                cashList.remove(i);
+                removed = true;
             }
         }
-        return 0;
     }
 }

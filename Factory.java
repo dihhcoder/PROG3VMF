@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+/**
+ * The Driver class of the Vending Machine Factory Simulator
+ * @author John Kendrick Constantino
+ */
 public class Factory {
     public static void main(String[] args) {
         int choice, testChoice, flag = 0;

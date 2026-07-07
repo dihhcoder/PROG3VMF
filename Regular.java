@@ -1,11 +1,19 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+
+/**
+ * Constructor class for a Regular Vending Machine
+ * @author John Kendrick R. Constantino
+ */
 public class Regular {
     
     private CashStorage cashStorage;
     private ArrayList<Slots> slotList;
     private CashStorage cashInserted;
 
+    /**
+     * Creates a Regular vending Machine
+     */
     public Regular() {
         this.cashStorage = new CashStorage(new ArrayList<Denomination>());
         this.slotList = new ArrayList<Slots>();
@@ -15,6 +23,10 @@ public class Regular {
         this.cashInserted = new CashStorage(new ArrayList<Denomination>());
     }
 
+    /**
+     * Displays and allows user controls to the vending features of the vending machine
+     * @param keyboard the scanner used to get input
+     */
     public void vending(Scanner keyboard) {
         int choice;
         do {
@@ -52,6 +64,10 @@ public class Regular {
         } while (choice != 4);
     }
 
+    /**
+     * Displays and allows user controls to the management features of the vending machine
+     * @param keyboard the scanner used to get input
+     */
     public void management(Scanner keyboard) {
         int choice;
         do {
@@ -83,21 +99,25 @@ public class Regular {
         } while (choice != 4);
     }
 
+    /**
+     * Displays and allows user control to insert denominations for purchase
+     * @param keyboard the scanner used to get input
+     */
     public void displayInsert(Scanner keyboard) {
         int qty;
         double value;
         System.out.println("\n===== Insert Coins or Bills =====");
         System.out.print("\nValid Denominations: ");
         for (Denomination d : cashInserted.getCashList()) {
-            System.out.printf("P%.2f, ", d.getValue());
+            System.out.printf("P%.2f | ", d.getValue());
         }
         System.out.print("\nEnter Denomination Value: ");
         value = keyboard.nextDouble();
-        
+        keyboard.nextLine();
+
         if (!validDenomination(value)) {
             System.out.println("Invalid currency denomination. "
             + "Machine rejected the payment.");
-            keyboard.nextLine(); 
         } else {
             System.out.print("Enter Quantity: ");
             qty = keyboard.nextInt();
@@ -106,6 +126,11 @@ public class Regular {
         }
     }
 
+    /**
+     * Displays and allows user control to make a purchase
+     * Also handles the dispension of items and change
+     * @param keyboard the scanner used to get input
+     */
     public void displaySell(Scanner keyboard) {
         String targetName;
         Slots selectedSlot;
@@ -152,6 +177,9 @@ public class Regular {
         }
     }
 
+    /**
+     * Displays items on the slots on the vending machine
+     */
     public void displayItems() {
         int i;
         System.out.println("Displaying available items:");
@@ -159,8 +187,8 @@ public class Regular {
             if (slotList.get(i).getItem() == null) {
                 System.out.println((i + 1) + ": Empty Slot");
             } else {
-                System.out.printf("%d. Item: %s           Calorie Count: %.2f"
-                + "           Price: P%.2f           Stock: %d%n", (i + 1), 
+                System.out.printf("%d. Item: %-14s Calorie Count: %-6.2f"
+                + " Price: P%-6.2f Stock: %d%n", (i + 1), 
                 slotList.get(i).getItem().getName(), 
                 slotList.get(i).getItem().getCalories(), 
                 slotList.get(i).getPrice(), slotList.get(i).getCurrentStock());
@@ -168,14 +196,20 @@ public class Regular {
         }
     }
 
+    /**
+     * Recieves a denomination from the user.
+     * @param cash the denomination inserted by the user
+     * @see Denomination class for denomination attributes
+     */
     public void recieveCash(Denomination cash) {
         int i, newQuantity;
         boolean check = false;
+        Denomination temp;
         if (cash.getValue() > 0 && cash.getQuantity() > 0) {
             check = false;
             for (i = 0; i < cashInserted.getCashList().size()
                 && !check; i++) {
-                Denomination temp = cashInserted.getCashList().get(i);
+                temp = cashInserted.getCashList().get(i);
                 if (temp.getValue() == cash.getValue()) {
                     newQuantity = temp.getQuantity() + cash.getQuantity();
                     cashInserted.getCashList().set(i,
@@ -188,6 +222,10 @@ public class Regular {
         }
     }
 
+    /**
+     * Checks if total cash inserted is sufficient for item purchase
+     * @param price The price of the item to be purchased
+     */
     public double checkCash(double price) {
         double totalCash = 0;
         for (Denomination d : cashInserted.getCashList()) {
@@ -201,17 +239,26 @@ public class Regular {
         }
     }
 
+    /**
+     * Returns the cash inserted by the user back
+     */
     public void returnCash() {
-        System.out.print(" Returning inserted cash...");
-        for (Denomination d : cashInserted.getCashList()) {
-            if (d.getQuantity() > 0) {
-                System.out.println("Returning " + d.getQuantity() 
-                + " of P" + d.getValue());
+        if(cashInserted.getCashList().isEmpty()){
+            System.out.print("Returning cash...\n");
+            for (Denomination d : cashInserted.getCashList()) {
+                if (d.getQuantity() > 0) {
+                    System.out.printf("Returning %d of P%.2f",
+                    d.getQuantity(), d.getValue());
+                }
             }
         }
         cashInserted = new CashStorage(new ArrayList<Denomination>());
     }
 
+    /**
+     * transfers the cash recieved after a successful transaction to 
+     * the vending machine's cash storage
+     */
     public void transferCashToStorage() {
         for (Denomination d : cashInserted.getCashList()) {
             if (d.getQuantity() > 0) {
@@ -221,6 +268,11 @@ public class Regular {
         cashInserted = new CashStorage(new ArrayList<Denomination>());
     }
 
+    /**
+     * checks for change availability by simulating the transaction first
+     * @param changeAmount the change needed to be provided by the vending machine
+     * @return true if change is available, else false
+     */
     public boolean checkChangeAvailability(double changeAmount) {
         int i;
         CashStorage tempCashList;
@@ -250,6 +302,10 @@ public class Regular {
         }
     }
 
+    /**
+     * gives the change to the user after a successful transaction
+     * @param changeAmount the change needed to be provided by the vending machine
+     */
     public void giveChange(double changeAmount) {
         int i;
         Denomination temp;
@@ -276,6 +332,11 @@ public class Regular {
         }
     }
 
+    /**
+     * dispenses the item chosen to be purchased by the user
+     * @param name the name of the Item that is being purchased
+     * @return Item to be dispensed if item exists and has stock, else null
+     */
     public Item dispenseItem(String name) {
         boolean itemFound = false;
         Item item = null;
@@ -301,6 +362,11 @@ public class Regular {
         return item;
     }
 
+    /**
+     * A helper method used to find a slot that contains a specific item
+     * @param name the name of the item used to search for its slot
+     * @return Slot that contains the item if it exists, else null
+     */
     public Slots slotFinder(String name) {
         Slots selectedSlot = null;
         for (Slots slot : slotList) {
@@ -312,6 +378,11 @@ public class Regular {
         return selectedSlot;
     }
 
+    /**
+     * Checks if the denomination that is being inserted is to be accepted by the machine
+     * @param value the value of the denomination that the user is trying to insert
+     * @return true if valid, else false
+     */
     public boolean validDenomination(double value) {
         boolean isValid = false;
         for (Denomination d : cashStorage.getCashList()) {
@@ -322,11 +393,18 @@ public class Regular {
         return isValid;
     }
 
+    /**
+     * Cancels the transaction and returns inserted cash
+     */
     public void cancelTransaction() {
         System.out.println("Transaction cancelled.");
         returnCash();
     }
 
+    /**
+     * Displays and allows user to choose which slot to manage
+     * @param keyboard the scanner used to get input
+     */
     public void selectSlot(Scanner keyboard) {
         int slotChoice = -1;
         System.out.println("\n===== Configure & Restock Slots =====");
@@ -347,47 +425,58 @@ public class Regular {
         } while (slotChoice != 0);
     }
 
+    /**
+     * Displays and allows the management of the selected slot
+     * @param slotIndex the index of the slot to be managed
+     * @param keyboard the scanner used to get input
+     */
     public void manageSlot(int slotIndex, Scanner keyboard) {
         int choice = -1;
         int quantity, currentStock;
-        int i;
+        int i, lastIndex;
         double calories, price;
         String itemName;
         Slots slot = slotList.get(slotIndex);
+        do{
         System.out.println("\n===== Managing Slot =====");
         System.out.println("Slot with item: " 
         + (slot.getItem() != null ? slot.getItem().getName() : "N/A"));
         System.out.println("1. Assign Item ");
         System.out.println("2. Add Item (Restock)");
-        System.out.println("3. Remove Assigned Item");
-        System.out.println("4. Change Item Price");
-        System.out.println("5. Return to previous menu");
+        System.out.println("3. Remove Items (Remove Stock)");
+        System.out.println("4. Remove Assigned Item");
+        System.out.println("5. Change Item Price");
+        System.out.println("6. Return to previous menu");
         System.out.print("Enter your choice: ");
         choice = keyboard.nextInt();
         keyboard.nextLine();
         switch (choice) {
             case 1:
-                quantity = 0;
-                System.out.print("Enter item name to assign: ");
-                itemName = keyboard.nextLine();
-                System.out.print("Enter item calorie count: ");
-                calories = keyboard.nextDouble();
-                keyboard.nextLine();
-                System.out.print("Enter item price: ");
-                price = keyboard.nextDouble();
-                keyboard.nextLine();
-                do {
-                    System.out.print("Enter quantity of items to add "
-                    + "(Maximum 10): ");
-                    quantity = keyboard.nextInt();
+                if(slot.getItem() == null){
+                    quantity = 0;
+                    System.out.print("Enter item name to assign: ");
+                    itemName = keyboard.nextLine();
+                    System.out.print("Enter item calorie count: ");
+                    calories = keyboard.nextDouble();
                     keyboard.nextLine();
-                } while (quantity < 1 || quantity > 10);
-                slot.setItem(new Item(itemName, calories));
-                slot.setPrice(price);
-                for (i = 0; i < quantity; i++) {
-                    slot.addItem(new Item(itemName, calories));
+                    System.out.print("Enter item price: ");
+                    price = keyboard.nextDouble();
+                    keyboard.nextLine();
+                    do {
+                        System.out.print("Enter quantity of items to add "
+                        + "(Maximum 10): ");
+                        quantity = keyboard.nextInt();
+                        keyboard.nextLine();
+                    } while (quantity < 1 || quantity > 10);
+                    slot.setItem(new Item(itemName, calories));
+                    slot.setPrice(price);
+                    for (i = 0; i < quantity; i++) {
+                        slot.addItem(new Item(itemName, calories));
+                    }
+                    System.out.println("Item assigned successfully.");
+                } else {
+                    System.out.println("Slot already has an item assigned");
                 }
-                System.out.println("Item assigned successfully.");
                 break;
             case 2:
                 if (slot.getItem() == null) {
@@ -395,70 +484,101 @@ public class Regular {
                     + " Please assign an item first.");
                 } else {
                     quantity = 0;
-                    currentStock = 0;
-                    for (i = 0; i < slotList.size(); i++) {
-                        if (slotList.get(i).getItem() != null 
-                        && slotList.get(i).getItem().getName()
-                        .equalsIgnoreCase(slot.getItem().getName())) {
-                            currentStock++;
-                        }
-                    }
+                    currentStock = slot.getItemList().size();
                     do {
                     System.out.println("Enter quantity of items to add:"
                     + " (Total stock should not exceed 10)");
                     System.out.println("Current stock for '"
                      + slot.getItem().getName() + "': " + currentStock);
+                    System.out.print("Enter quantity: ");
                         quantity = keyboard.nextInt();
                         keyboard.nextLine();
-                    } while (quantity + currentStock < 1
-                         || quantity + currentStock > 10);
+                    } while (quantity + currentStock > 10 || quantity < 0);
                     for (i = 0; i < quantity; i++) {
                         slot.addItem(new Item(slot.getItem().getName(),
                         slot.getItem().getCalories()));
                     }
                     System.out.println("Items added successfully.");
+                    printSpecificSummary(slotIndex, keyboard);
                 }
                 break;
             case 3:
                 if (slot.getItem() == null) {
-                    System.out.println("\nNo item assigned to this slot.");
+                    System.out.println("\nNo item assigned to this slot."
+                    + " Please assign an item first.");
                 } else {
-                    slot.setItem(null);
-                    slot.getItemList().clear();
-                    slot.setPrice(0.0);
-                    System.out.println("\nAssigned item removed successfully.");
+                    quantity = 0;
+                    currentStock = slot.getItemList().size();
+                    do {
+                    System.out.println("Enter quantity of items to remove:"
+                    + " (Total stock should not be less than 0)");
+                    System.out.println("Current stock for '"
+                     + slot.getItem().getName() + "': " + currentStock);
+                    System.out.print("Enter your choice: ");
+                        quantity = keyboard.nextInt();
+                        keyboard.nextLine();
+                    } while (currentStock - quantity < 0 || quantity < 0);
+                    printSpecificSummary(slotIndex, keyboard);
+
+                    for (i = 0; i < quantity; i++) {
+                        lastIndex = slot.getItemList().size() - 1;
+                        slot.getItemList().remove(lastIndex);
+                    }
+                    System.out.println("Items removed successfully.");
                 }
                 break;
             case 4:
                 if (slot.getItem() == null) {
+                    System.out.println("\nNo item assigned to this slot.");
+                } else {
+                    printSpecificSummary(slotIndex, keyboard);
+                    slot.setItem(null);
+                    slot.getItemList().clear();
+                    slot.setPrice(0.0);
+                    slot.setBeforeStock(0);
+                    slot.resetSold();
+                    System.out.println("\nAssigned item removed successfully.");
+                }
+                break;
+            case 5:
+                if (slot.getItem() == null) {
                     System.out.println("No item assigned to this slot."
                     + " Please assign an item first.");
                 } else {
-                    System.out.println("\nEnter new price for the item:");
+                    System.out.println("\n Current " + slot.getItem().getName()
+                     + " " + slot.getPrice());
+                    System.out.print("Enter new price for the item: ");
                     price = keyboard.nextDouble();
                     keyboard.nextLine();
                     slot.setPrice(price);
                     System.out.println("Item price updated successfully.");
                 }
                 break;
-            case 5:
+            case 6:
                 System.out.println("\nReturning to previous menu.");
                 break;
             default:
                 System.out.println("\nInvalid choice. Please try again.");
-        }
+            }
+        } while (choice != 6);
     }
 
+    /**
+     * Displays and allows user to manage the cash vault and its contents
+     * @param keyboard the scanner used to get input
+     */
     public void manageCashStorage(Scanner keyboard) {
-        int choice = -1;
-        int addQuantity, removeQuantity;
+        int i, choice = -1;
+        int addQuantity, removeQuantity, index = -1;
         boolean validInput;
         double addValue, removeValue;
         do{
             System.out.println("Managing cash storage...");
             System.out.println("1. Add Cash");
             System.out.println("2. Remove Cash");
-            System.out.println("3. Return to previous menu");
+            System.out.println("3. Add New Denomination");
+            System.out.println("4. Remove a Denomination");
+            System.out.println("5. Return to previous menu");
             System.out.print("Enter your choice: ");
             choice = keyboard.nextInt();
             keyboard.nextLine();
@@ -529,14 +649,77 @@ public class Regular {
                     }
                     break;
                 case 3:
+                    validInput = false;
+                    addValue = 0;
+                    do{
+                        System.out.println("Enter denomination value:");
+                        addValue = keyboard.nextDouble();
+                        keyboard.nextLine();
+                        if (!validDenomination(addValue)) {
+                            validInput = true;
+                        } else {
+                            System.out.println("Denomination already exists. "
+                            + "Please try again.");
+                        }
+                    } while (!validInput);
+                    addQuantity = 0;
+                    validInput = false;
+                    do{
+                        System.out.println("Enter quantity to add:");
+                        addQuantity = keyboard.nextInt();
+                        keyboard.nextLine();
+                        if (addQuantity > 0) {
+                            validInput = true;
+                        } else {
+                            System.out.println("Invalid quantity."
+                            + " Please enter a positive number or 0.");
+                            validInput = false;
+                        }
+                    } while (!validInput);
+                    cashStorage.addCash(new Denomination(addValue,
+                        addQuantity));
+                    cashInserted.addCash(new Denomination(addValue, 0));
+                    System.out.println("Cash added successfully.");
+                    break;
+                case 4:
+                    validInput = false;
+                    removeValue = 0;
+                    do{
+                        System.out.println("Enter denomination value:");
+                        removeValue = keyboard.nextDouble();
+                        keyboard.nextLine();
+                        if (validDenomination(removeValue)) {
+                            validInput = true;
+                        } else {
+                            System.out.println("Denomination does not exist. "
+                            + "Please try again.");
+                        }
+                    } while (!validInput);
+                    for(i = 0; i < cashStorage.getCashList().size() && index == -1; i++){
+                        if(cashStorage.getCashList().get(i).getValue() == removeValue){
+                            index = i;
+                        }
+                    }
+                    System.out.printf("Dispensing remaining amount of P%.2f%n", removeValue);
+                    System.out.print("Dispensed " + cashStorage.getCashList().get(index).getQuantity());
+                    System.out.printf(" of P%.2f%n", removeValue);
+                    cashStorage.removeDenomination(removeValue);
+                    cashInserted.removeDenomination(removeValue);
+                    System.out.println("Denomination removed successfully.");
+                    break;
+                case 5:
                     System.out.println("Returning to previous menu.");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
                 }
-        } while(choice != 3); 
+        } while(choice != 5); 
     }
 
+    /**
+     * Prints a transaction summary with data from the last audit
+     * @param keyboard the scanner used to get input
+     */
     public void printTransactionSummary(Scanner keyboard) {
         double totalSalesRevenue = 0;
         int i;
@@ -544,7 +727,7 @@ public class Regular {
         double itemRevenue, totalVaultBalance, cashTotal;
         System.out.println("Transaction Summary:");
         System.out.println("Items Sold:");
-        System.out.printf("%-4s | %-15s | %-7s | %-12s |"
+        System.out.printf(" %-4s | %-15s | %-7s | %-12s |"
         + " %-10s | %-6s | %-9s%n","Slot", "Item Name", "Price",
          "Starting Stock", "Ending Stock", "Sold", "Revenue");
         System.out.println("------------------------------------------------"
@@ -557,15 +740,18 @@ public class Regular {
                 totalSalesRevenue += itemRevenue;
                 
                 System.out.printf(" [%d]  | %-15s | P%-6.2f | %-14d | %-12d |"
-                + " %-4d | P%.2f%n", (i + 1), s.getItem().getName(),
+                + " %-6d | P%.2f%n", (i + 1), s.getItem().getName(),
                 s.getPrice(), s.getBeforeStock(), s.getCurrentStock(),
                 s.getSold(), itemRevenue);
+                s.resetSold();
+                s.setBeforeStock(s.getCurrentStock());
             } else {
-                System.out.printf(" [%d]  | %-15s | %-6s | %-14s |"
-                + " %-12s | %-4s | %-9s%n", (i + 1), "          N/A ",
+                System.out.printf(" [%d]  | %-15s | %-7s | %-14s |"
+                + " %-12s | %-6s | %-9s%n", (i + 1), "N/A",
                 "-", "-", "-", "-", "-");
             }
         }
+        System.out.printf("Revenue Collected: P%.2f%n", totalSalesRevenue);
         System.out.println("Current Cash Audit:");
         totalVaultBalance = 0;
         for (Denomination d : cashStorage.getCashList()) {
@@ -579,6 +765,41 @@ public class Regular {
         }
         System.out.printf("Total Cash In Machine: P%.2f%n%n",
         totalVaultBalance);
+        System.out.println("Press enter to continue...");
+        keyboard.nextLine();
+    }
+
+    /**
+     * prints a transaction summary with data from the last restocking/audit of the selected slot
+     * @param index the index of the selected slot
+     * @param keyboard the scanner used to get input
+     */
+    public void printSpecificSummary(int index, Scanner keyboard){
+        double totalSalesRevenue = 0;
+        Slots s;
+        double itemRevenue;
+        System.out.println("Transaction Summary:");
+        System.out.println("Items Sold:");
+        System.out.printf(" %-15s | %-7s | %-12s |"
+        + " %-10s | %-6s | %-9s%n", "Item Name", "Price",
+         "Starting Stock", "Ending Stock", "Sold", "Revenue");
+        System.out.println("------------------------------------------------"
+        + "---------------------------------");
+        
+        s = slotList.get(index);
+        if (s.getItem() != null) {
+            itemRevenue = s.getSold() * s.getPrice();
+            totalSalesRevenue += itemRevenue;
+            
+            System.out.printf(" %-15s | P%-6.2f | %-14d | %-12d |"
+            + " %-6d | P%.2f%n", s.getItem().getName(),
+            s.getPrice(), s.getBeforeStock(), s.getCurrentStock(),
+            s.getSold(), itemRevenue);
+        } else {
+            System.out.printf(" %-15s | %-6s | %-14s |"
+            + " %-12s | %-4s | %-9s%n", "N/A",
+            "-", "-", "-", "-", "-");
+        }
         System.out.printf("Revenue Collected: P%.2f%n", totalSalesRevenue);
         System.out.println("Press enter to continue...");
         keyboard.nextLine();
