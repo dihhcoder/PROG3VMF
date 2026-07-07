@@ -224,7 +224,7 @@ public class Regular {
 
     /**
      * Checks the total value of the denominations inserted
-     * @returns total ammount of cash 
+     * @return total ammount of cash inserted 
      */
     public double checkCash() {
         double totalCash = 0;
