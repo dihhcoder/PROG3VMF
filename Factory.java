@@ -43,10 +43,10 @@ public class Factory {
                             keyboard.nextLine();
                             switch (testChoice) {
                                 case 1:
-                                    regular.vending();
+                                    regular.vending(keyboard);
                                     break;
                                 case 2:
-                                    regular.management();
+                                    regular.management(keyboard);
                                     break;
                                 case 3:
                                     System.out.println("\nReturning to"

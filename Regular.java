@@ -15,8 +15,7 @@ public class Regular {
         this.cashInserted = new CashStorage(new ArrayList<Denomination>());
     }
 
-    public void vending() {
-        Scanner vendingScan = new Scanner(System.in);
+    public void vending(Scanner keyboard) {
         int choice;
         do {
             System.out.println("\n===== Regular Vending Interface =====");
@@ -26,8 +25,8 @@ public class Regular {
             System.out.println("3. Purchase an Item");
             System.out.println("4. Cancel And/Or Return");
             System.out.print("Select an option: ");
-            choice = vendingScan.nextInt();
-            vendingScan.nextLine();
+            choice = keyboard.nextInt();
+            keyboard.nextLine();
 
             switch (choice) {
                 case 1:
@@ -35,16 +34,16 @@ public class Regular {
                     break;
 
                 case 2:
-                    displayInsert();
+                    displayInsert(keyboard);
                     break;
 
                 case 3:
-                    displaySell();
+                    displaySell(keyboard);
                     break;
 
                 case 4:
                     cancelTransaction(); 
-                    System.out.println("Returning to main control system...");
+                    System.out.println("Returning to main menu.");
                     break;
 
                 default:
@@ -53,8 +52,7 @@ public class Regular {
         } while (choice != 4);
     }
 
-    public void management() {
-        Scanner manageScan = new Scanner(System.in);
+    public void management(Scanner keyboard) {
         int choice;
         do {
             System.out.println("\n===== Regular Vending Management =====");
@@ -63,18 +61,18 @@ public class Regular {
             System.out.println("3. Print Sales Audit & Transaction Summary");
             System.out.println("4. Exit Management Mode");
             System.out.print("Enter your choice: ");
-            choice = manageScan.nextInt();
-            manageScan.nextLine();
+            choice = keyboard.nextInt();
+            keyboard.nextLine();
 
             switch (choice) {
                 case 1:
-                    selectSlot();
+                    selectSlot(keyboard);
                     break;
                 case 2:
-                    manageCashStorage();
+                    manageCashStorage(keyboard);
                     break;
                 case 3:
-                    printTransactionSummary();
+                    printTransactionSummary(keyboard);
                     break;
                 case 4:
                     System.out.println("Exiting Maintenance Services Mode.");
@@ -85,9 +83,8 @@ public class Regular {
         } while (choice != 4);
     }
 
-    public void displayInsert(){
+    public void displayInsert(Scanner keyboard) {
         int qty;
-        Scanner vendingScan = new Scanner(System.in);
         double value;
         System.out.println("\n===== Insert Coins or Bills =====");
         System.out.print("\nValid Denominations: ");
@@ -95,30 +92,29 @@ public class Regular {
             System.out.printf("P%.2f, ", d.getValue());
         }
         System.out.print("\nEnter Denomination Value: ");
-        value = vendingScan.nextDouble();
+        value = keyboard.nextDouble();
         
         if (!validDenomination(value)) {
             System.out.println("Invalid currency denomination. "
             + "Machine rejected the payment.");
-            vendingScan.nextLine(); 
+            keyboard.nextLine(); 
         } else {
             System.out.print("Enter Quantity: ");
-            qty = vendingScan.nextInt();
-            vendingScan.nextLine(); 
+            qty = keyboard.nextInt();
+            keyboard.nextLine(); 
             recieveCash(new Denomination(value, qty));
         }
     }
 
-    public void displaySell(){
+    public void displaySell(Scanner keyboard) {
         String targetName;
         Slots selectedSlot;
         double itemPrice, totalInserted, changeOwed;
         Item purchasedItem;
-        Scanner vendingScan = new Scanner(System.in);
         System.out.println("\n===== Purchase an Item =====");
         System.out.print("\nEnter the exact name of the "
         + "item you want to buy: ");
-        targetName = vendingScan.nextLine();
+        targetName = keyboard.nextLine();
         selectedSlot = slotFinder(targetName);
         if (selectedSlot == null) {
             System.out.println("That item does not exist in this machine.");
@@ -331,8 +327,7 @@ public class Regular {
         returnCash();
     }
 
-    public void selectSlot() {
-        Scanner slot = new Scanner(System.in);
+    public void selectSlot(Scanner keyboard) {
         int slotChoice = -1;
         System.out.println("\n===== Configure & Restock Slots =====");
         do {
@@ -340,25 +335,24 @@ public class Regular {
             System.out.println("Select a slot number to manage (1-8)" 
             + " or 0 to return:");
             System.out.print("Enter your choice: ");
-            slotChoice = slot.nextInt();
-            slot.nextLine();
+            slotChoice = keyboard.nextInt();
+            keyboard.nextLine();
             if (slotChoice == 0) {
                 System.out.println("Returning to previous menu.");
             } else if (slotChoice < 1 || slotChoice > 8) {
                 System.out.println("Invalid slot number. Please try again.");
             } else {
-                manageSlot(slotChoice - 1);
+                manageSlot(slotChoice - 1, keyboard);
             }
         } while (slotChoice != 0);
     }
 
-    public void manageSlot(int slotIndex) {
+    public void manageSlot(int slotIndex, Scanner keyboard) {
         int choice = -1;
         int quantity, currentStock;
         int i;
         double calories, price;
         String itemName;
-        Scanner manaSlot = new Scanner(System.in);
         Slots slot = slotList.get(slotIndex);
         System.out.println("\n===== Managing Slot =====");
         System.out.println("Slot with item: " 
@@ -369,24 +363,24 @@ public class Regular {
         System.out.println("4. Change Item Price");
         System.out.println("5. Return to previous menu");
         System.out.print("Enter your choice: ");
-        choice = manaSlot.nextInt();
-        manaSlot.nextLine();
+        choice = keyboard.nextInt();
+        keyboard.nextLine();
         switch (choice) {
             case 1:
                 quantity = 0;
                 System.out.print("Enter item name to assign: ");
-                itemName = manaSlot.nextLine();
+                itemName = keyboard.nextLine();
                 System.out.print("Enter item calorie count: ");
-                calories = manaSlot.nextDouble();
-                manaSlot.nextLine();
+                calories = keyboard.nextDouble();
+                keyboard.nextLine();
                 System.out.print("Enter item price: ");
-                price = manaSlot.nextDouble();
-                manaSlot.nextLine();
+                price = keyboard.nextDouble();
+                keyboard.nextLine();
                 do {
                     System.out.print("Enter quantity of items to add "
                     + "(Maximum 10): ");
-                    quantity = manaSlot.nextInt();
-                    manaSlot.nextLine();
+                    quantity = keyboard.nextInt();
+                    keyboard.nextLine();
                 } while (quantity < 1 || quantity > 10);
                 slot.setItem(new Item(itemName, calories));
                 slot.setPrice(price);
@@ -414,8 +408,8 @@ public class Regular {
                     + " (Total stock should not exceed 10)");
                     System.out.println("Current stock for '"
                      + slot.getItem().getName() + "': " + currentStock);
-                        quantity = manaSlot.nextInt();
-                        manaSlot.nextLine();
+                        quantity = keyboard.nextInt();
+                        keyboard.nextLine();
                     } while (quantity + currentStock < 1
                          || quantity + currentStock > 10);
                     for (i = 0; i < quantity; i++) {
@@ -441,8 +435,8 @@ public class Regular {
                     + " Please assign an item first.");
                 } else {
                     System.out.println("\nEnter new price for the item:");
-                    price = manaSlot.nextDouble();
-                    manaSlot.nextLine();
+                    price = keyboard.nextDouble();
+                    keyboard.nextLine();
                     slot.setPrice(price);
                     System.out.println("Item price updated successfully.");
                 }
@@ -455,28 +449,27 @@ public class Regular {
         }
     }
 
-    public void manageCashStorage() {
+    public void manageCashStorage(Scanner keyboard) {
         int choice = -1;
         int addQuantity, removeQuantity;
         boolean validInput;
         double addValue, removeValue;
-        Scanner cashStor = new Scanner(System.in);
         do{
             System.out.println("Managing cash storage...");
             System.out.println("1. Add Cash");
             System.out.println("2. Remove Cash");
             System.out.println("3. Return to previous menu");
             System.out.print("Enter your choice: ");
-            choice = cashStor.nextInt();
-            cashStor.nextLine();
+            choice = keyboard.nextInt();
+            keyboard.nextLine();
             switch (choice) {
                 case 1:
                     validInput = false;
                     addValue = 0;
                     do{
                         System.out.println("Enter denomination value:");
-                        addValue = cashStor.nextDouble();
-                        cashStor.nextLine();
+                        addValue = keyboard.nextDouble();
+                        keyboard.nextLine();
                         if (validDenomination(addValue)) {
                             validInput = true;
                         } else {
@@ -488,8 +481,8 @@ public class Regular {
                     validInput = false;
                     do{
                         System.out.println("Enter quantity to add:");
-                        addQuantity = cashStor.nextInt();
-                        cashStor.nextLine();
+                        addQuantity = keyboard.nextInt();
+                        keyboard.nextLine();
                         if (addQuantity > 0) {
                             validInput = true;
                         } else {
@@ -508,8 +501,8 @@ public class Regular {
                     removeQuantity = 0;
                     do{
                         System.out.println("Enter denomination value:");
-                        removeValue = cashStor.nextDouble();
-                        cashStor.nextLine();
+                        removeValue = keyboard.nextDouble();
+                        keyboard.nextLine();
                         if (validDenomination(removeValue)) {
                             validInput = true;
                         } else {
@@ -520,8 +513,8 @@ public class Regular {
                     validInput = false;
                     do{
                         System.out.println("Enter quantity to remove:");
-                        removeQuantity = cashStor.nextInt();
-                        cashStor.nextLine();
+                        removeQuantity = keyboard.nextInt();
+                        keyboard.nextLine();
                         if (removeQuantity > 0) {
                             validInput = true;
                         } else {
@@ -544,7 +537,7 @@ public class Regular {
         } while(choice != 3); 
     }
 
-    public void printTransactionSummary() {
+    public void printTransactionSummary(Scanner keyboard) {
         double totalSalesRevenue = 0;
         int i;
         Slots s;
@@ -587,5 +580,7 @@ public class Regular {
         System.out.printf("Total Cash In Machine: P%.2f%n%n",
         totalVaultBalance);
         System.out.printf("Revenue Collected: P%.2f%n", totalSalesRevenue);
+        System.out.println("Press enter to continue...");
+        keyboard.nextLine();
     }
 }
