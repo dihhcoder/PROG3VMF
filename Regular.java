@@ -31,7 +31,7 @@ public class Regular {
         int choice;
         do {
             System.out.println("\n===== Regular Vending Interface =====");
-            System.out.printf("Current Balance: P%.2f%n", checkCash(0));
+            System.out.printf("Current Balance: P%.2f%n", checkCash());
             System.out.println("1. View Available Items");
             System.out.println("2. Insert Coins or Bills");
             System.out.println("3. Purchase an Item");
@@ -147,7 +147,7 @@ public class Regular {
             System.out.println("Sorry, that item is completely out of stock.");
         } else {
             itemPrice = selectedSlot.getPrice();
-            totalInserted = checkCash(0);
+            totalInserted = checkCash();
             if (totalInserted < itemPrice) {
                 System.out.printf("Insufficient funds. "
                 + "Item costs P%.2f but you only inserted P%.2f.%n",
@@ -223,20 +223,15 @@ public class Regular {
     }
 
     /**
-     * Checks if total cash inserted is sufficient for item purchase
-     * @param price The price of the item to be purchased
+     * Checks the total value of the denominations inserted
+     * @returns total ammount of cash 
      */
-    public double checkCash(double price) {
+    public double checkCash() {
         double totalCash = 0;
         for (Denomination d : cashInserted.getCashList()) {
             totalCash += d.getValue() * d.getQuantity();
         }
-        if (totalCash >= price) {
-            return totalCash;
-        } else {
-            System.out.println("Insufficient cash inserted.");
-            return 0;
-        }
+        return totalCash;
     }
 
     /**

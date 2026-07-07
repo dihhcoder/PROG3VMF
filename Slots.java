@@ -76,7 +76,7 @@ public class Slots
 
     /**
      * Gets the number of items on the slot before restocking
-     * @return 
+     * @return number of items on the slot before restocking
      */
     public int getBeforeStock()
     {

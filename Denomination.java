@@ -8,8 +8,8 @@ public class Denomination{
 
     /**
      * Creates a denomination object(bills and/or coins) with a value and quantity.
-     * @param value
-     * @param quantity
+     * @param value the value of the denomination
+     * @param quantity the amount of denominations
      */
     public Denomination(double value, int quantity){
         this.value = value;
