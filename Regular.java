@@ -477,7 +477,14 @@ public class Regular {
                 if (slot.getItem() == null) {
                     System.out.println("\nNo item assigned to this slot."
                     + " Please assign an item first.");
-                } else {
+                } 
+
+                else if(slot.getCurrentStock() >= 10) {
+                    System.out.println("\nSlot is already full. "
+                    + "Cannot add more items.");
+                }
+
+                else {
                     quantity = 0;
                     currentStock = slot.getItemList().size();
                     do {
@@ -501,7 +508,14 @@ public class Regular {
                 if (slot.getItem() == null) {
                     System.out.println("\nNo item assigned to this slot."
                     + " Please assign an item first.");
-                } else {
+                }
+                
+                else if(slot.getCurrentStock() == 0) {
+                    System.out.println("\nSlot is already empty. "
+                    + "Cannot remove more items.");
+                }
+
+                else {
                     quantity = 0;
                     currentStock = slot.getItemList().size();
                     do {
